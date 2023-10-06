@@ -24,7 +24,7 @@ dataSp <- data %>% as_Spatial() # Needed for GWR
 
 ## Fix parameters for subsequent analyses
 formula_gwr <- "Your GWR formula"
-formula_ml <- "Your multilevel model formula" # Your formula needs including '|clust' somewhere (i.e. random intercept and/or slopes)
+formula_ml <- "Your multilevel model formula" # Your formula needs including '|clust' somewhere (i.e. random intercept and/or slopes by clust, clust = GWR beta-based clusters further defined)
 matDist <- gw.dist(dp.locat = coordinates(dataSp)) # Distance matrix for GWR
 
 ## GWR-ML hybrid model AIC function to be further minimized
