@@ -24,7 +24,7 @@ dataSp <- data %>% as_Spatial() # Needed for GWR
 
 ## Fix parameters for subsequent analyses
 formula_gwr <- "Your GWR formula"
-formula_ml <- "Your multilevel model formula"
+formula_ml <- "Your multilevel model formula" # Your formula needs including '|clust' somewhere (i.e. random intercept and/or slopes)
 matDist <- gw.dist(dp.locat = coordinates(dataSp)) # Distance matrix for GWR
 
 ## GWR-ML hybrid model AIC function to be further minimized
@@ -79,7 +79,7 @@ Pk <- cutree(tree, k) # Cut the dendrogram to get the partition in k clusters
 data$clust <- Pk %>% as.factor()
 
 ## Multilevel model with GWR beta regions as random effect
-lme <- lmer(formula_ml, data = data) # Your formula needs including '|clust' somewhere
+lme <- lmer(formula_ml, data = data) # # Your formula needs including '|clust' somewhere (i.e. random intercept and/or slopes)
 
 # Enjoy the results :)
 
