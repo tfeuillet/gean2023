@@ -17,6 +17,7 @@ library(GWmodel)
 library(spdep)
 library(dplyr)
 library(ClustGeo)
+library(GenSA)
 
 ## Import your spatial data
 data <- "Your own level-1 data" # Not reproducible
@@ -33,11 +34,11 @@ func <-function(par){
   # GWR model
   GWR <- gwr.basic(data=dataSp, bw=par[1], kernel="bisquare", 
                     adaptive=T, dMat=matDistTmp, formula = formula_gwr) # Choose your own spatial weighting scheme
-  GWR1betas <- GWR$SDF[,c(1:X)] # X = number of predictors
+  GWR1betas <- GWR$SDF[,c(1:X)] # X = number of predictors including intercept
   
   # Regionalization of GWR betas with clustGeo package
-  D0 <- dist(GWR1betas@data) # Matrix distance based on GWR betas
-  D1 <- as.dist(matDist) # Distance dissimilarity matrix
+  D0 <- dist(GWR1betas@data) # Dissimilarity matrix based on GWR betas
+  D1 <- as.dist(matDist) # Distance matrix
   tree <- hclustgeo(D0, D1, alpha = 0.75) # Choose your own spatial constraint (alpha)
   Pk <- cutree(tree, par[2]) # cut the dendrogram to get the partition in k clusters
   data$clust <- Pk %>% as.factor()
@@ -67,12 +68,12 @@ GWR_leung$Ftests
 
 ## GWR betas regionalization
 
-GWR1betas <- GWR_fin$SDF[,c(1:X)] # X being the number of predictors including intercepts
+GWR1betas <- GWR_fin$SDF[,c(1:X)] # X being the number of predictors including intercept
 
 ## clustering with ClustGeo
 D <- dist(GWR_fin$SDF[,1])
 D0 <- dist(GWR1betas@data) # Beta dissimilarity matrix
-D1 <- as.dist(matDist) # Distance dissimilarity matrix
+D1 <- as.dist(matDist) # Distance matrix
 tree <- hclustgeo(D, D1, alpha = 0.7)
 k <- optim$par[2]
 Pk <- cutree(tree, k) # Cut the dendrogram to get the partition in k clusters
